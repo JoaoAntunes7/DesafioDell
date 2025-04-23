@@ -4,6 +4,9 @@
 #include <time.h>
 #include <stdbool.h>
 
+#define MAX_STARTUPS 8
+#define LINHAS 40
+
 typedef struct StartUp{
     char nome[100];
     char slogan[200];
@@ -77,7 +80,6 @@ void administrarBatalha(struct Batalha b[], int escolha){
             if(b[ind].s1.pontos > b[ind].s2.pontos){
                 b[ind].s1.pontos += 30;
                 b[ind].s2.vivo = 0;
-                printf("s1 pontos: %d\n", b[ind].s1.pontos);
             } else if(b[ind].s1.pontos < b[ind].s2.pontos) {
                 b[ind].s2.pontos += 30;
                 b[ind].s1.vivo = 0;
@@ -89,14 +91,14 @@ void administrarBatalha(struct Batalha b[], int escolha){
         }
         if(num == 1){
             evento(&b[ind].s1, event);  //altera a 1ª startup da batalha
-        } else {
+        } else if(num == 2) {
             evento(&b[ind].s2, event);  //altera a 2ª startup da batalha
         }
     }
 }
 
 void gerarBatalhas(struct StartUp s[], int n, int round){
-    struct Batalha b[4];
+    struct Batalha b[MAX_STARTUPS/2];
     int escolha;
     int ind=0;
     int batalhasDecididas = 0;
@@ -142,7 +144,7 @@ void gerarBatalhas(struct StartUp s[], int n, int round){
 
 void lerString(char* c, int tam) { //converter char em string 
     fgets(c, tam, stdin);
-    c[strcspn(c, "\n")] = '\0'; // remove \n
+    c[strcspn(c, "\n")] = '\0';    //remove \n
 }
 
 int compare(const void *a, const void *b){ //função para comparar os pontos das start ups 
@@ -152,41 +154,100 @@ int compare(const void *a, const void *b){ //função para comparar os pontos da
    return (s2->pontos - s1->pontos);
 }
 
-int main(){
-    srand(time(NULL));
-    int numTotal = 0; //número fixo de start ups
-    int numVivos=0;   //número variável de start ups
-    struct StartUp s[8]; //cria um array de 8 posições (nº max) de um objeto StartUp -> armazena startup vivas
-    struct StartUp total[8]; //cria um array para armazenar todas as startups e organiza-las 
-    
-    clrscr();
-    while(1){ //!!depois adicionar sistema para usuário decidir se quer adicionar mais de 4 até 8
-        char nome[100];
-        char slogan[200];
+void leArquivo(struct StartUp geradas[]){
+    int ind = 0;   //indice das linhas
+
+    FILE *file = fopen("startups.txt", "r");
+    if(!file){ //erro ao abrir o arquivo
+        printf("Erro ao abrir o Arquivo!");
+        return;
+    }
+    char linha[100];
+    while(fgets(linha, sizeof(linha), file)){
+        char nome[50];
+        char slogan[100];
         int ano;
 
-        if(numTotal == 4)
+        char *token = strtok(linha, ";");
+        if (!token) continue;
+        strcpy(nome, token);
+        nome[strcspn(nome, "\n")] = '\0';
+
+        token = strtok(NULL, ";");
+        if (!token) continue;
+        strcpy(slogan, token);
+        slogan[strcspn(slogan, "\n")] = '\0';
+
+        token = strtok(NULL, ";");
+        if (!token) continue;
+        ano = atoi(token);
+
+        startup_new(&geradas[ind++], nome, slogan, ano);
+    }
+    fclose(file);
+}
+
+int main(){
+    srand(time(NULL));
+    int numTotal = 0; //número de todas as start ups criadas
+    int numVivos=0;   //número das start ups restantes
+    struct StartUp s[MAX_STARTUPS]; //cria um array de 8 posições (nº max) de um objeto StartUp -> armazena startup vivas
+    struct StartUp total[MAX_STARTUPS]; //cria um array para armazenar todas as startups e organiza-las 
+    
+    while(1){
+        if(numTotal == 8)
             break;
 
-        printf("Crie as Start Ups (no mínimo 4 e no máximo 8) | Start Ups criadas: %d\n", numTotal);
-        printf("Nome: ");
-        lerString(nome, sizeof(nome));      
-        //scanf("%s", &nome);
-        printf("Slogan: ");
-        lerString(slogan, sizeof(slogan));  
-        //scanf(" %s", &slogan);
-        printf("Ano: ");
-        scanf("%d", &ano);
-        getchar(); //usado para limpar \n deixado no buffer e conseguir usar lerString()
         clrscr();
-        startup_new(&s[numTotal], nome, slogan, ano);
-        numTotal++;
+        int escolha,num;
+        printf("Crie as Start Ups (4 ou 8) | Start Ups criadas: %d\n", numTotal);
+        printf("1.Gerar uma Start Up\n2.Cadastrar uma Start Up\n3.Pronto\n");
+        printf("Escolha: ");
+        scanf("%d", &escolha);
+        if(escolha == 1){
+            printf("Número de Start Ups a serem geradas: ");
+            scanf("%d", &num);
+            if((MAX_STARTUPS - numTotal - num) >= 0){ //8 - nº de start ups criadas - nº de start ups a serem geradas
+                struct StartUp read[LINHAS]; 
+                leArquivo(read);
 
-    } 
+                for(int i=0; i<num; i++){ //armazena start ups aleatórias do txt no s
+                    int j = rand() % LINHAS; //pega um número aleatorio entre 0 e 40-1
+                    if(read[j].vivo){ //para não repetir start ups
+                        s[numTotal] = read[j];
+                        read[j].vivo = 0;  
+                        numTotal++;
+                    } else {
+                        i--; //repete o loop até achar alguma start up não repetida
+                    }
+                }
+            } else {
+                //nº excedeu o número max de start ups
+            }
+        } else if(escolha == 2) {
+            char nome[50];
+            char slogan[100];
+            int ano;
+            getchar(); //usado para limpar \n deixado no buffer e conseguir usar lerString()
+            printf("Nome: ");
+            lerString(nome, sizeof(nome));      
+            printf("Slogan: ");
+            lerString(slogan, sizeof(slogan));  
+            printf("Ano: ");
+            scanf("%d", &ano);
+            getchar(); 
+            startup_new(&s[numTotal], nome, slogan, ano);
+            numTotal++;
 
-    if(numTotal % 4 != 0 && numTotal > 8){ //número de startups deve ser múltiplo de 4 e menor que 8 
-        printf("Número inadequado de StartUps!\n");
-        return 1;
+        } else if(escolha == 3){
+            if((numTotal % 4 == 0) && (numTotal <= 8)){
+                break;
+            } else {
+               //nº inadequado de start ups
+            } 
+        } else {
+            //nº de escolha inexistente
+        }
     }
 
     numVivos = numTotal; //número de start ups vivas recebe o número de start ups cadastradas
