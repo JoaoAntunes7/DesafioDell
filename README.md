@@ -34,7 +34,7 @@ escolha do JavaScript facilitou muito a implementação da lógica na interface 
 ---
 
 ## 💻 Instruções para Execução - Linux/Windows
-- 🛑 Para execução no terminal, o **git** precisa estar instalado.
+- 🛑 Para execução no terminal, o **git** deve estar instalado.
 - 🛑 Para execução fora do terminal, basta abrir o **index.html** localizado no **desafioDell/src/site/startuprush/**
 
 ### No terminal
