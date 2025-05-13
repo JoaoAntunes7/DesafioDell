@@ -1,4 +1,4 @@
-# 📝 Desafio do Dell IT Academy 2025
+# 📝 Desafio - Dell IT Academy 2025
 - Código desenvolvido para o processo seletivo do Dell IT Academy de 2025.
 - Tempo de desenvolvimento: 1 semana
 ---
