@@ -15,12 +15,12 @@
 ---
 
 ### 🎨 Front - End
-- [HTML](/src/css/) 
-- [CSS](/src/site/startuprush/)
+- [HTML](/src/site/startuprush/) 
+- [CSS](/src/css/)
 ---
 
 ### 🧩 Back - End
-- [JavaScript](/src/site/startuprush/startuprush.j/)
+- [JavaScript](/src/site/startuprush/startuprush.js/)
 ---
 
 ### ➕ Extra
