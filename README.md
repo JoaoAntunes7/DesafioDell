@@ -11,13 +11,23 @@
 - **Administração de Batalhas**: Seleção manual ou automática, exibição de pontuação, registro de eventos, cálculo do vencedor e execução do Shark Fight, com bonificação automática.
 - **Avanço de Fase**: Passagem automática para a próxima rodada após todas as batalhas concluídas.
 - **Relatórios Finais**: Ranking geral com estatísticas detalhadas e apresentação do slogan da startup campeã.
-- **Funcionalidade Extra**: Criada livremente pelo desenvolvedor, com implementação e demonstração.
+- **Funcionalidade Extra**: Geração automática de startup.
 ---
 
 ### 🎨 Front - End
-- HTML
-- CSS
+- [HTML](/src/css/) 
+- [CSS](/src/site/startuprush/)
 ---
 
 ### 🧩 Back - End
-- JavaScript
+- [JavaScript](/src/site/startuprush/startuprush.j/)
+---
+
+### ➕ Extra
+- Inicialmente eu desenvolvi o projeto em C, mas acabei optando por migrar para o 
+JavaScript devido à dificuldade em integrar o backend com o frontend utilizando APIs. A 
+escolha do JavaScript facilitou muito a implementação da lógica na interface gráfica
+- [Código em C](/src/c/startuprush.c/)
+---
+
+---
