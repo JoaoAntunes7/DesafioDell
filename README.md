@@ -9,7 +9,7 @@
 ---
 
 ### ✨ Funcionalidades
-- **Cadastro de Startups**: Nome, slogan, ano de fundação e validação de 4 a 8 participantes (número par).
+- **Cadastro de Startups**: Nome, slogan, ano de fundação e validação de 4 ou 8 participantes.
 - **Sorteio de Batalhas**: Pareamento aleatório entre startups no início de cada rodada.
 - **Administração de Batalhas**: Seleção manual ou automática, exibição de pontuação, registro de eventos, cálculo do vencedor e execução do Shark Fight, com bonificação automática.
 - **Avanço de Fase**: Passagem automática para a próxima rodada após todas as batalhas concluídas.
